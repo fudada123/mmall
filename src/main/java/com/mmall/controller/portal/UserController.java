@@ -116,7 +116,7 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "get_infomation.do", method = RequestMethod.POST)
+    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse<User> get_infomation(HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);

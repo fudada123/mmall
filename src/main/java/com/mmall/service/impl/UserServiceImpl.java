@@ -113,7 +113,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     public ServiceResponse<String> forgetResetPassword(String username, String passwordNew, String forgetToken) {
-        if (StringUtils.isNotBlank(forgetToken)) {
+        if (StringUtils.isBlank(forgetToken)) {
             return ServiceResponse.createByErrorMessage("参数错误，token需要传递");
         }
         ServiceResponse validResponse = this.checkValid(username, Const.USERNAME);
@@ -122,7 +122,7 @@ public class UserServiceImpl implements IUserService {
             return ServiceResponse.createByErrorMessage("用户不存在");
         }
         String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX+username);
-        if (StringUtils.isNotBlank(token)) {
+        if (StringUtils.isBlank(token)) {
             return ServiceResponse.createByErrorMessage("token无效或者过期");
         }
         if (StringUtils.equals(forgetToken, token)) {
@@ -182,5 +182,17 @@ public class UserServiceImpl implements IUserService {
         }
         user.setPassword(StringUtils.EMPTY);
         return ServiceResponse.createBySuccess(user);
+    }
+
+    /**
+     * 校验是否是管理员
+     * @param user
+     * @return
+     */
+    public ServiceResponse checkAdminRole(User user) {
+        if (user != null) {
+            return ServiceResponse.createBySuccess();
+        }
+        return ServiceResponse.createByError();
     }
 }
