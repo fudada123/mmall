@@ -10,6 +10,7 @@ import com.mmall.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,7 +32,7 @@ public class CategoryManageController {
 
 
 
-    @RequestMapping("add_category.do")
+    @RequestMapping(value = "add_category.do",method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse addCategory(HttpSession session, String categoryName, @RequestParam(value = "parentId",defaultValue = "0") int parentId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -50,7 +51,7 @@ public class CategoryManageController {
 
     }
 
-    @RequestMapping("set_category_name.do")
+    @RequestMapping(value = "set_category_name.do",method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse setCategoryName(HttpSession session, Integer categoryId, String categoryName) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -91,7 +92,7 @@ public class CategoryManageController {
         }
         if (iUserService.checkAdminRole(user).isSuccess()) {
             //查询当前节点的id和递归子节点的id
-            return iCategorySerivce.getChildrenparallelCategory(categoryId);
+            return iCategorySerivce.getCategoryAndChildrenById(categoryId);
         } else {
             return ServiceResponse.createByErrorMessage("无权限操作，需要管理员权限");
         }

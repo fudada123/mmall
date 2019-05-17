@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class CategoryServiceImpl implements ICategorySerivce {
 
 
 
-    public ServiceResponse addCategory(String categoryName,Integer parentId) {
+    public ServiceResponse addCategory(@PathVariable("categoryName") String categoryName, Integer parentId) {
         if (parentId == null || StringUtils.isBlank(categoryName)) {
             return ServiceResponse.createByErrorMessage("添加品类参数错误");
         }
@@ -72,6 +73,11 @@ public class CategoryServiceImpl implements ICategorySerivce {
         return ServiceResponse.createBySuccess(categoryList);
     }
 
+    /**
+     * 递归查询父节点的id以及孩子结点的id
+     * @param categoryId
+     * @return
+     */
     public ServiceResponse getCategoryAndChildrenById(Integer categoryId) {
         Set<Category> categorySet = Sets.newHashSet();
         findChildCategory(categorySet, categoryId);
@@ -91,7 +97,7 @@ public class CategoryServiceImpl implements ICategorySerivce {
         if (category != null) {
             categorySet.add(category);
         }
-        //查找子节点，递归算法一定要有一个推出条件
+        //查找子节点，递归算法一定要有一个退出条件
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParntId(categoryId);
         for (Category categoryItem:categoryList) {
             findChildCategory(categorySet, categoryItem.getId());
