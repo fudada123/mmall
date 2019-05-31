@@ -32,4 +32,7 @@ public interface CartMapper {
 
     int selectCartProductCount(@Param("userId") Integer userId);
 
+
+    List<Cart> seletCheckCartByUserId(Integer userId);
+
 }
